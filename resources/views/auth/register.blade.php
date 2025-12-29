@@ -29,11 +29,11 @@
             @csrf
             <div>
                 <label class="block text-sm font-bold mb-1">Nama Lengkap</label>
-                <input type="text" name="real_name" value="{{ old('name') }}" class="w-full p-3 border border-[#dbe0e6] rounded-lg focus:ring-2 focus:ring-[#136dec] outline-none" placeholder="Masukkan nama Anda" required>
+                <input type="text" name="real_name" value="{{ old('real_name') }}" class="w-full p-3 border border-[#dbe0e6] rounded-lg focus:ring-2 focus:ring-[#136dec] outline-none" placeholder="Masukkan nama Anda" required>
             </div>
             <div>
                 <label class="block text-sm font-bold mb-1">Username</label>
-                <input type="username" name="username" value="{{ old('email') }}" class="w-full p-3 border border-[#dbe0e6] rounded-lg focus:ring-2 focus:ring-[#136dec] outline-none" placeholder="Masukkan username Anda" required>
+                <input type="text" name="username" value="{{ old('username') }}" class="w-full p-3 border border-[#dbe0e6] rounded-lg focus:ring-2 focus:ring-[#136dec] outline-none" placeholder="Buat username unik" required>
             </div>
             <div>
                 <label class="block text-sm font-bold mb-1">Password</label>
@@ -46,12 +46,12 @@
 
             <div>
                 <label class="block text-sm font-bold mb-1">Jenis Akun</label>
-                <select name="role" required>
-                    <option value="warehouse_admin">Admin Gudang</option>
-                    <option value="procurement_manager">Manajer Pembelian</option>
-                </select>
+                    <select name="role" class="w-full p-3 border border-[#dbe0e6] rounded-lg focus:ring-2 focus:ring-[#136dec] outline-none" required>
+                        <option value="warehouse_admin">Admin Gudang</option>
+                        <option value="procurement_manager">Manajer Pembelian</option>
+                    </select>
             </div> 
-            
+    
             <button type="submit" class="w-full bg-[#136dec] text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition mt-2">
                 Register
             </button>

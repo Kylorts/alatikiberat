@@ -7,29 +7,29 @@
         
         {{-- MENU KHUSUS ADMIN GUDANG --}}
         @if(auth()->user()->role === 'warehouse_admin')
-            <a href="/admin-gudang/management" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+            <a href="/admin/management" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">inventory_2</span> Manajemen Spare Part
             </a>
-            <a href="/admin-gudang/inbound" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+            <a href="/admin/inbound" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">download</span> Inbound Stock
             </a>
-            <a href="/admin-gudang/outbound" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+            <a href="/admin/outbound" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">upload</span> Outbound Stock
             </a>
-            <a href="/admin-gudang/stock-location" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+            <a href="/admin/locations" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">location_on</span> Lokasi Stok
             </a>
         @endif
 
         {{-- MENU KHUSUS MANAJER --}}
         @if(auth()->user()->role === 'procurement_manager')
-            <a href="/manajer-pembelian/dashboard" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+            <a href="/manager/dashboard" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">dashboard</span> Dashboard Manajer
             </a>
-            <a href="/manajer-pembelian/inventory-reports" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+            <a href="/manager/reports" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">analytics</span> Laporan Inventaris
             </a>
-            <a href="/manajer-pembelian/supplier-management" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
+            <a href="/manager/supplier-management" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">group</span> Manajemen Supplier
             </a>
         @endif
