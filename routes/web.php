@@ -7,9 +7,17 @@ use App\Http\Controllers\StockTransactionController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
-Route::get('/', function () {
-    return view('welcome');
+// 1. Halaman Utama (Sekarang diarahkan langsung ke Login)
+Route::get('/', [AuthController::class, 'showLogin'])->middleware('guest');
+
+// 2. Rute Autentikasi (Hanya bisa diakses jika BELUM login)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 });
 
 /**

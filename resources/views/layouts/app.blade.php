@@ -33,11 +33,11 @@
 <body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display">
     <div class="flex min-h-screen w-full flex-row overflow-hidden">
         
-        @include('components.sidebar')
+        @include('layouts.sidebar')
 
         <main class="flex-1 flex flex-col h-full overflow-y-auto bg-background-light dark:bg-background-dark relative">
             
-            @include('components.header')
+            @include('layouts.header')
 
             <div class="p-6 max-w-[1400px] w-full mx-auto flex flex-col gap-6">
                 @yield('content')
