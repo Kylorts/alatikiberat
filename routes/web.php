@@ -5,6 +5,7 @@ use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\SparePartController;
 use App\Http\Controllers\StockTransactionController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -30,11 +31,15 @@ Route::middleware(['auth', 'role:warehouse_admin'])->prefix('admin')->group(func
     // UC-01: Mengelola Data Suku Cadang
     Route::get('/management', [SparePartController::class, 'index'])->name('admin.management');
     Route::post('/spare-parts/store', [SparePartController::class, 'store'])->name('spare-parts.store');
+    Route::put('/spare-parts/{id}', [SparePartController::class, 'update'])->name('spare-parts.update');
+    Route::delete('/spare-parts/{id}', [SparePartController::class, 'destroy'])->name('spare-parts.destroy');
     // UC-04: Melihat & Update Lokasi Rak
     Route::get('/locations', [SparePartController::class, 'rackLocations'])->name('admin.locations');
+    Route::get('/admin/lokasi-stok', [InventoryController::class, 'locationIndex'])->name('admin.location');
     // UC-02: Mencatat Stok Masuk (Inbound)
     Route::get('/inbound', [StockTransactionController::class, 'inboundIndex'])->name('admin.inbound');
     Route::post('/inbound/store', [StockTransactionController::class, 'storeInbound'])->name('admin.inbound.store');
+    Route::patch('/admin/inbound/{id}/status', [StockTransactionController::class, 'updateStatus'])->name('admin.inbound.updateStatus');
     // UC-03: Mencatat Stok Keluar (Outbound)
     // Menampilkan halaman form outbound
     Route::get('/outbound', [StockTransactionController::class, 'outboundIndex'])->name('admin.outbound');

@@ -43,6 +43,40 @@ class SparePartController extends Controller
         return redirect()->back()->with('success', 'Data Suku Cadang berhasil ditambahkan.');
     }
 
+// app/Http/Controllers/SparePartController.php
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required',
+            'category' => 'required',
+            'brand' => 'required',
+            'unit_price' => 'required|numeric',
+            'location_rack' => 'required',
+            'min_stock' => 'required|integer',
+        ]);
+
+        DB::transaction(function () use ($request, $id) {
+            $part = SparePart::findOrFail($id);
+            // Update data utama (Termasuk Brand & Kategori)
+            $part->update($request->only(['name', 'category', 'brand', 'unit_price']));
+
+            // Update data inventory
+            $part->inventory->update([
+                'location_rack' => $request->location_rack,
+                'min_stock' => $request->min_stock,
+            ]);
+        });
+
+        return redirect()->back()->with('success', 'Data Suku Cadang berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        SparePart::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Item berhasil dihapus.');
+    }
+
     // UC-04: Menampilkan Daftar Lokasi Rak
     public function rackLocations()
     {

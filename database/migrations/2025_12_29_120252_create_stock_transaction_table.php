@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('type', ['masuk', 'keluar']);
             $table->integer('quantity');
             $table->string('reference');
-            $table->enum('status', ['Selesai', 'Pending'])->default('Selesai');
+            $table->enum('status', ['Selesai', 'Pending', 'Batal'])->default('Selesai');
             $table->text('notes')->nullable();
             $table->timestamps();
         });
