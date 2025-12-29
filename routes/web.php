@@ -21,7 +21,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     
     // Rute untuk Admin Gudang
-    Route::middleware(['auth', 'role:admin_gudang'])->group(function () {
+    Route::middleware(['auth', 'role:warehouse_admin'])->group(function () {
         Route::prefix('admin-gudang')->group(function () {
             Route::view('/management', 'admin-gudang-management');
             Route::view('/inbound', 'admin-gudang-inboundstock');
@@ -31,12 +31,12 @@ Route::middleware('auth')->group(function () {
     });
 
     // Rute untuk Manajer
-    Route::middleware(['auth', 'role:manajer'])->group(function () {
+    Route::middleware(['auth', 'role:procurement_manager'])->group(function () {
         Route::prefix('manajer-pembelian')->group(function () {
             Route::view('/dashboard', 'manajer-pembelian-dashboard');
             Route::view('/inventory-reports', 'manajer-pembelian-inventoryreports');
             Route::view('/supplier-management', 'manajer-pembelian-suppliermanagement');
         });
     });
-    
+
 });

@@ -14,31 +14,25 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    //Proses Login
+    // Proses Login
     public function login(Request $request) {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'username' => 'required',
             'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            // Ambil data user yang baru saja login
-            $user = Auth::user();
-
-            // Pengalihan default berdasarkan role
-             if ($user->role === 'admin_gudang') {
+        
+            // Sesuaikan pengalihan dengan nilai role di migrasi
+            if (Auth::user()->role === 'warehouse_admin') {
                 return redirect()->intended('/admin-gudang/management');
-            } elseif ($user->role === 'manajer') {
+            } else {
                 return redirect()->intended('/manajer-pembelian/dashboard');
             }
-
-            // Default jika role tidak dikenali
-            return redirect()->intended('/');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah.']);
+        return back()->withErrors(['username' => 'Username atau password salah.']);
     }
 
     // Menampilkan halaman register
@@ -46,23 +40,23 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-        // Proses Register
-        public function register(Request $request) {
+    // Proses Register
+    public function register(Request $request) {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:100|unique:users',
+            'real_name' => 'required|string|max:150',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:admin_gudang,manajer', // Validasi input role
+            'role' => 'required|in:warehouse_admin,procurement_manager',
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'username' => $request->username,
+            'real_name' => $request->real_name,
             'password' => Hash::make($request->password),
-            'role' => $request->role, // BARIS INI WAJIB ADA agar role tersimpan
+            'role' => $request->role,
         ]);
 
-        return redirect('/login')->with('success', 'Akun berhasil dibuat! Silakan login.');
+        return redirect('/login')->with('success', 'Akun berhasil dibuat!');
     }
 
     // Logout

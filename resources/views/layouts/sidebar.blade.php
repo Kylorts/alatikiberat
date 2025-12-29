@@ -6,7 +6,7 @@
     <nav class="flex-1 space-y-1">
         
         {{-- MENU KHUSUS ADMIN GUDANG --}}
-        @if(auth()->user()->role === 'admin_gudang')
+        @if(auth()->user()->role === 'warehouse_admin')
             <a href="/admin-gudang/management" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">inventory_2</span> Manajemen Spare Part
             </a>
@@ -22,7 +22,7 @@
         @endif
 
         {{-- MENU KHUSUS MANAJER --}}
-        @if(auth()->user()->role === 'manajer')
+        @if(auth()->user()->role === 'procurement_manager')
             <a href="/manajer-pembelian/dashboard" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-sm">
                 <span class="material-symbols-outlined">dashboard</span> Dashboard Manajer
             </a>

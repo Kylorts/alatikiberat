@@ -20,8 +20,8 @@
         <form action="/login" method="POST" class="space-y-4">
             @csrf
             <div>
-                <label class="block text-sm font-bold mb-1">Email</label>
-                <input type="email" name="email" class="w-full p-3 border border-[#dbe0e6] rounded-lg focus:ring-2 focus:ring-[#136dec] outline-none" required>
+                <label class="block text-sm font-bold mb-1">Username</label>
+                <input type="username" name="username" class="w-full p-3 border border-[#dbe0e6] rounded-lg focus:ring-2 focus:ring-[#136dec] outline-none" required>
             </div>
             <div>
                 <label class="block text-sm font-bold mb-1">Password</label>
