@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('category'); // Engine Parts, dll
             $table->string('brand');
-            $table->decimal('price_per_unit', 15, 2); // Muncul di management
+            $table->decimal('unit_price', 15, 2); // Muncul di management
             $table->timestamps();
         });
     }

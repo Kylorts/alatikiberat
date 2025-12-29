@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username', 100)->unique();
             $table->string('passsword', 255);
             $table->string('real_name', 150);
-            $table->enum('role', ['warehouse_admin', 'procurement_manager']);
+            $table->enum('role', ['warehouse_admin', 'procurement_manager'])->default('warehouse_admin');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

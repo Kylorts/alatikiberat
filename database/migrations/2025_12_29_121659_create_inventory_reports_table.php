@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('inventory_reports', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('manager_id')->constrained()->onDelete('cascade');
             $table->string('report_name');
             $table->string('report_type'); // Valuasi Aset, Pergerakan Stok, dll.
             $table->date('start_period');
@@ -20,7 +21,6 @@ return new class extends Migration
             $table->json('report_data')->nullable(); // Snapshot of report data
             $table->string('file_path')->nullable(); // Lokasi file Excel/PDF hasil export
             $table->timestamps();
-            $table->foreignId('manager_id')->constrained()->onDelete('cascade');
         });
     }
 
