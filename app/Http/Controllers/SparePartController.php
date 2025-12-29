@@ -29,9 +29,15 @@ class SparePartController extends Controller
         ]);
 
         DB::transaction(function () use ($validated) {
-            $part = SparePart::create($validated);
-            
-            // Otomatis buat entry di tabel inventory saat sparepart baru ditambah
+            $part = SparePart::create([
+                'part_number' => $validated['part_number'],
+                'name' => $validated['name'],
+                'category' => $validated['category'],
+                'brand' => $validated['brand'],
+                'unit_price' => $validated['unit_price'],
+                // supplier_id dibiarkan null di sini
+            ]);
+        
             Inventory::create([
                 'spare_part_id' => $part->id,
                 'stock' => 0,
@@ -40,7 +46,7 @@ class SparePartController extends Controller
             ]);
         });
 
-        return redirect()->back()->with('success', 'Data Suku Cadang berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Barang berhasil didaftarkan.');
     }
 
 // app/Http/Controllers/SparePartController.php

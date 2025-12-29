@@ -53,6 +53,8 @@ Route::middleware(['auth', 'role:warehouse_admin'])->prefix('admin')->group(func
 Route::middleware(['auth', 'role:procurement_manager'])->prefix('manager')->group(function () {
     // UC-05 & UC-07: Dashboard Monitoring & Notifikasi Stok Menipis
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('manager.dashboard');
+    Route::post('/mass-reorder', [DashboardController::class, 'massReorder'])->name('manager.mass-reorder');
+    Route::post('/reorder/{id}', [DashboardController::class, 'singleReorder'])->name('manager.reorder');
     // UC-06: Mengelola Data Supplier
     Route::get('/supplier-management', [SupplierController::class, 'index'])->name('manager.suppliers');
     Route::post('/suppliers/store', [SupplierController::class, 'store'])->name('suppliers.store');
