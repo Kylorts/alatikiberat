@@ -9,6 +9,9 @@ use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Notifications\LowStockNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Models\User;
 
 class StockTransactionController extends Controller
 {
@@ -63,40 +66,52 @@ class StockTransactionController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-    {
-        $transaction = StockTransaction::findOrFail($id);
-        $oldStatus = $transaction->status;
-        $newStatus = $request->status;
+{
+    $transaction = StockTransaction::findOrFail($id);
+    $oldStatus = $transaction->status;
+    $newStatus = $request->status;
 
-        DB::transaction(function () use ($transaction, $oldStatus, $newStatus) {
-            $inventory = Inventory::where('spare_part_id', $transaction->spare_part_id)->first();
+    DB::transaction(function () use ($transaction, $oldStatus, $newStatus) {
+        $inventory = Inventory::where('spare_part_id', $transaction->spare_part_id)->first();
 
-            if ($transaction->type === 'masuk') {
-                // Logika Inbound (Stok Bertambah jika Selesai)
-                if ($oldStatus !== 'Selesai' && $newStatus === 'Selesai') {
-                    $inventory->increment('stock', $transaction->quantity);
-                } elseif ($oldStatus === 'Selesai' && $newStatus !== 'Selesai') {
-                    $inventory->decrement('stock', $transaction->quantity);
-                }
-            } else {
-                // Logika Outbound (Stok Berkurang jika Selesai)
-                if ($oldStatus !== 'Selesai' && $newStatus === 'Selesai') {
-                    // Pastikan stok cukup sebelum mengubah ke Selesai
-                    if ($inventory->stock < $transaction->quantity) {
-                        throw new \Exception('Stok tidak mencukupi untuk menyelesaikan transaksi ini.');
-                    }
-                    $inventory->decrement('stock', $transaction->quantity);
-                } elseif ($oldStatus === 'Selesai' && $newStatus !== 'Selesai') {
-                    // Kembalikan stok jika status berubah dari Selesai ke lainnya
-                    $inventory->increment('stock', $transaction->quantity);
+        if ($transaction->type === 'masuk') {
+            // Logika Inbound (Stok Bertambah jika Selesai)
+            if ($oldStatus !== 'Selesai' && $newStatus === 'Selesai') {
+                $inventory->increment('stock', $transaction->quantity);
+            } elseif ($oldStatus === 'Selesai' && $newStatus !== 'Selesai') {
+                // Stok berkurang karena barang yang tadinya dianggap masuk dibatalkan/pending
+                $inventory->decrement('stock', $transaction->quantity);
+                
+                // Cek stok minimum setelah pengurangan (kasus Inbound dibatalkan)
+                if ($inventory->stock < $inventory->min_stock) {
+                    $managers = User::where('role', 'procurement_manager')->get();
+                    Notification::send($managers, new LowStockNotification($inventory));
                 }
             }
+        } else {
+            // Logika Outbound (Stok Berkurang jika Selesai)
+            if ($oldStatus !== 'Selesai' && $newStatus === 'Selesai') {
+                if ($inventory->stock < $transaction->quantity) {
+                    throw new \Exception('Stok tidak mencukupi untuk menyelesaikan transaksi ini.');
+                }
+                $inventory->decrement('stock', $transaction->quantity);
 
-            $transaction->update(['status' => $newStatus]);
-        });
+                // Cek stok minimum setelah pengurangan (kasus Outbound selesai)
+                if ($inventory->stock < $inventory->min_stock) {
+                    $managers = User::where('role', 'procurement_manager')->get();
+                    Notification::send($managers, new LowStockNotification($inventory));
+                }
+            } elseif ($oldStatus === 'Selesai' && $newStatus !== 'Selesai') {
+                // Kembalikan stok jika status berubah dari Selesai ke lainnya
+                $inventory->increment('stock', $transaction->quantity);
+            }
+        }
 
-        return redirect()->back()->with('success', 'Status transaksi berhasil diperbarui.');
-    }
+        $transaction->update(['status' => $newStatus]);
+    });
+
+    return redirect()->back()->with('success', 'Status transaksi berhasil diperbarui.');
+}
 
     // UC-03: Simpan Stok Keluar
     public function storeOutbound(Request $request)
@@ -131,6 +146,10 @@ class StockTransactionController extends Controller
             // 4. Logika Stok: Hanya kurangi stok jika statusnya 'Selesai'
             if ($request->status === 'Selesai') {
                 $inventory->decrement('stock', $request->quantity);
+                if ($inventory->stock < $inventory->min_stock) {
+                $managers = \App\Models\User::where('role', 'procurement_manager')->get();
+                \Illuminate\Support\Facades\Notification::send($managers, new \App\Notifications\LowStockNotification($inventory));
+                }
             }
         });
 
